@@ -1,39 +1,48 @@
 "use client"
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import GoogleAddressSearch from "../../_components/GoogleAddressSearch";
 import { Button } from "../../../components/ui/button";
 import { supabase } from "../../../utils/supabase/client";
-import { useUser } from "@clerk/nextjs";
-import { toast } from "sonner"
+import { useUser, useAuth } from "@clerk/nextjs";
+import { toast } from "sonner";
 import { Loader, LocateIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-
-
 
 function AddNewListing() {
   const [selectedAddress, setSelectedAddress] = useState();
   const [coordinates, setCoordinates] = useState();
   const { user } = useUser();
+  const { isLoaded, isSignedIn } = useAuth();
   const [loader, setLoader] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    if (isLoaded && !isSignedIn) {
+      router.push("/sign-in?redirect=/add-new-listing");
+    }
+  }, [isLoaded, isSignedIn, router]);
+
   const nextHandler = async () => {
     setLoader(true);
     const { data, error } = await supabase
       .from('listing')
       .insert([
-        { Address: selectedAddress, Coordinates: coordinates, createdBy: user?.primaryEmailAddress.emailAddress },
+        {
+          Address: selectedAddress,
+          Coordinates: coordinates,
+          createdBy: user?.primaryEmailAddress.emailAddress,
+
+        },
       ])
       .select();
 
     if (data) {
       setLoader(false);
-
       toast("New Address Added for Listing", "success");
       router.push("/edit-listing/" + data[0].id);
     }
     if (error) {
       setLoader(false);
-
       toast("Error while adding new address", "error");
     }
   };
@@ -47,13 +56,13 @@ function AddNewListing() {
           <GoogleAddressSearch
             selectedAddress={(value) => setSelectedAddress(value)}
             setCoordinates={(value) => setCoordinates(value)}
+
           />
           <Button
             disabled={!selectedAddress || !coordinates || loader}
             onClick={nextHandler}
           >
-            {loader ? <Loader className="
-            animate-spin" /> : "Next"}
+            {loader ? <Loader className="animate-spin" /> : "Next"}
           </Button>
         </div>
       </div>

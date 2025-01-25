@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { MapPinned } from 'lucide-react';
+import { toast } from 'sonner';
 function GoogleAddressSearch({ selectedAddress, setCoordinates }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [suggestions, setSuggestions] = useState([]);
@@ -46,7 +47,7 @@ function GoogleAddressSearch({ selectedAddress, setCoordinates }) {
         setCoordinates(place.geometry.location);
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error();
     }
   };
 
