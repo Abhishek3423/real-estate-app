@@ -2,7 +2,8 @@
 import React, { useEffect, useState } from 'react'
 import { supabase } from '../../../../utils/supabase/client'
 import { toast } from 'sonner';
-import Slider from '../_components/slider'
+import Slider from '../_components/Slider';
+
 
 function viewListing({ params }) {
   const [listingDetail, setListingDetail] = useState();

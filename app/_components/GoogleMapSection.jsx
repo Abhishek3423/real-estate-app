@@ -1,7 +1,7 @@
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 import React, { useEffect, useState } from 'react';
 import Lottie from 'react-lottie';
-import animationData from '../../public/animation.json';
+import animationData from '../../public/Animation.json';
 import MarkerItem from './MarkerItem';
 
 const containerStyle = {
